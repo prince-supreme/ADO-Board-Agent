@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>Azure DevOps Agent</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 12l10 5 10-5M2 17l10 5 10-5" stroke="%2332d4a4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'>
+</head>
+<body>
+  <div class="app-shell" id="appLayout">
+    <button class="sidebar-overlay" id="mobileSidebarOverlay" type="button" aria-label="Close sidebar"></button>
+
+    <aside class="sidebar" id="sidebar" aria-label="Azure DevOps assistant navigation">
+      <div class="sidebar-header">
+        <div class="brand" aria-label="ADO Agent">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 12l10 5 10-5M2 17l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="brand-copy">
+            <strong>ADO Agent</strong>
+            <small>Work item assistant</small>
+          </span>
+        </div>
+
+        <button class="icon-btn sidebar-toggle desktop-only" id="sidebarToggle" type="button" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg class="icon-expanded" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <svg class="icon-collapsed" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button class="icon-btn mobile-only" id="mobileSidebarClose" type="button" aria-label="Close sidebar" title="Close sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="rail-actions" aria-label="Compact actions">
+        <button class="rail-btn" type="button" data-action="new-chat" title="New Chat" aria-label="New Chat">+</button>
+        <button class="rail-btn" type="button" data-prompt="Create a User Story #&#10;Title: &#10;Project:" title="Create User Story" aria-label="Create User Story">✚</button>
+        <button class="rail-btn" type="button" data-prompt="Get details of work item #" title="Get Work Item" aria-label="Get Work Item">⌕</button>
+        <button class="rail-btn" type="button" data-format="xlsx" data-prompt="Give complete hierarchy report in Excel for work item #" title="Excel Report" aria-label="Excel Report">▦</button>
+        <button class="rail-btn" type="button" data-prompt="Change state of work item # to In Progress" title="Change State" aria-label="Change State">↻</button>
+      </nav>
+
+      <div class="sidebar-content">
+        <button class="new-chat-btn" id="newChatBtn" type="button">
+          <span aria-hidden="true">+</span>
+          <span>New Chat</span>
+        </button>
+
+        <section class="sidebar-section" data-collapsible data-section-id="quick-actions">
+          <button class="section-toggle" type="button" aria-expanded="true">
+            <span>Quick Actions</span>
+            <span class="section-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="section-content">
+            <button class="chip" type="button" data-prompt="Create a User Story #&#10;Title: &#10;Project:" title="Create User Story" aria-label="Create User Story">
+              <span class="chip-icon" aria-hidden="true">✚</span><span class="chip-text">Create User Story</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Update user story #" title="Update User Story" aria-label="Update User Story">
+              <span class="chip-icon" aria-hidden="true">✎</span><span class="chip-text">Update User Story</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Get details of work item #" title="Get Work Item" aria-label="Get Work Item">
+              <span class="chip-icon" aria-hidden="true">⌕</span><span class="chip-text">Get Work Item</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Delete user story # with soft-delete" title="Delete User Story" aria-label="Delete User Story">
+              <span class="chip-icon" aria-hidden="true">⌫</span><span class="chip-text">Delete User Story</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Create a bug under story #" title="Create Bug" aria-label="Create Bug">
+              <span class="chip-icon" aria-hidden="true">🐞</span><span class="chip-text">Create Bug</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Create a task under story #" title="Create Task" aria-label="Create Task">
+              <span class="chip-icon" aria-hidden="true">✓</span><span class="chip-text">Create Task</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Link story # to feature #" title="Link Hierarchy" aria-label="Link Hierarchy">
+              <span class="chip-icon" aria-hidden="true">🔗</span><span class="chip-text">Link Hierarchy</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Change state of work item # to In Progress" title="Change State" aria-label="Change State">
+              <span class="chip-icon" aria-hidden="true">↻</span><span class="chip-text">Change State</span>
+            </button>
+            <button class="chip" type="button" data-prompt="Add tags backend and api to work item #" title="Tag Work Item" aria-label="Tag Work Item">
+              <span class="chip-icon" aria-hidden="true">#</span><span class="chip-text">Tag Work Item</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="sidebar-section" data-collapsible data-section-id="reports">
+          <button class="section-toggle" type="button" aria-expanded="true">
+            <span>Reports</span>
+            <span class="section-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="section-content">
+            <button class="chip report" type="button" data-format="xlsx" data-prompt="Give complete hierarchy report in Excel for work item #" title="Hierarchy Excel" aria-label="Hierarchy Excel">
+              <span class="chip-icon" aria-hidden="true">▦</span><span class="chip-text">Hierarchy Excel</span>
+            </button>
+            <button class="chip report" type="button" data-format="xlsx" data-prompt="Give task report in Excel under work item #" title="Task Excel" aria-label="Task Excel">
+              <span class="chip-icon" aria-hidden="true">▤</span><span class="chip-text">Task Excel</span>
+            </button>
+            <button class="chip" type="button" data-format="csv" data-prompt="Export child work items as CSV for work item #" title="Children CSV" aria-label="Children CSV">
+              <span class="chip-icon" aria-hidden="true">CSV</span><span class="chip-text">Children CSV</span>
+            </button>
+            <button class="chip" type="button" data-format="txt" data-prompt="Give summary as TXT file for work item #" title="Summary TXT" aria-label="Summary TXT">
+              <span class="chip-icon" aria-hidden="true">TXT</span><span class="chip-text">Summary TXT</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="sidebar-section" data-collapsible data-section-id="history">
+          <button class="section-toggle" type="button" aria-expanded="true">
+            <span>Chat History</span>
+            <span class="section-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="section-content history-list" id="chatHistoryList">
+            <button class="history-empty" type="button" disabled>No saved chats yet</button>
+          </div>
+        </section>
+
+        <section class="sidebar-section compact-info" data-collapsible data-section-id="examples">
+          <button class="section-toggle" type="button" aria-expanded="true">
+            <span>Examples</span>
+            <span class="section-chevron" aria-hidden="true">▾</span>
+          </button>
+          <div class="section-content examples">
+            <button class="example-chip" type="button" data-prompt="Get complete hierarchy for epic #">Get hierarchy</button>
+            <button class="example-chip" type="button" data-format="xlsx" data-prompt="Give task report in Excel under work item #">Task report Excel</button>
+            <button class="example-chip" type="button" data-prompt="Create a task under story #">Create task</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="clear-history-btn" id="clearHistoryBtn" type="button">Clear history</button>
+      </div>
+    </aside>
+
+    <main class="chat-area" aria-label="Chat workspace">
+      <header class="chat-header">
+        <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" type="button" aria-label="Open sidebar" aria-expanded="false" title="Open sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="chat-title">
+          <span>Azure DevOps Agent</span>
+          <strong id="activeChatTitle">New conversation</strong>
+        </div>
+
+        <div class="header-actions">
+          <div class="status-pill" id="statusPill" title="Backend connection status">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-text" id="statusText">Connecting...</span>
+          </div>
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch theme" title="Switch theme">
+            <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3v2.5M12 18.5V21M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M3 12h2.5M18.5 12H21M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77M12 16a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M20 15.2A7.8 7.8 0 118.8 4 6.2 6.2 0 0020 15.2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="messages" id="messages" aria-live="polite" aria-label="Conversation messages">
+        <div class="empty-state" id="emptyState">
+          <span class="empty-icon" aria-hidden="true">◆</span>
+          <h1>Ask ADO Agent</h1>
+          <p>Create, update, inspect, link, and export Azure DevOps work items.</p>
+          <div class="empty-actions">
+            <button type="button" data-prompt="Get complete hierarchy for epic #">Hierarchy</button>
+            <button type="button" data-format="xlsx" data-prompt="Give task report in Excel under work item #">Excel report</button>
+            <button type="button" data-prompt="Create a task under story #">Create task</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="typing-indicator hidden" id="typingIndicator" aria-live="polite">
+        <div class="avatar">AI</div>
+        <div class="bubble typing" aria-label="Assistant is typing">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <footer class="composer-area">
+        <div class="composer">
+          <div class="composer-top">
+            <select id="outputFormatSelect" class="format-select" aria-label="Choose output format">
+              <option value="chat">Chat</option>
+              <option value="xlsx">Excel</option>
+              <option value="csv">CSV</option>
+              <option value="txt">TXT</option>
+              <option value="json">JSON</option>
+            </select>
+            <span class="char-counter"><span id="charCounter">0</span> chars</span>
+            <button class="text-btn" id="clearInputBtn" type="button">Clear</button>
+          </div>
+          <div class="input-row">
+            <textarea id="userInput" placeholder="Ask about work items, hierarchy, reports, tags, or state changes..." rows="2" autofocus></textarea>
+            <button id="sendBtn" class="send-btn" type="button" disabled aria-label="Send message">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p class="input-hint"><kbd>Enter</kbd> send · <kbd>Shift</kbd> + <kbd>Enter</kbd> new line · <kbd>Ctrl</kbd> + <kbd>K</kbd> focus</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-label="Notifications"></div>
+  <script src="app.js"></script>
+</body>
+</html>
